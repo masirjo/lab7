@@ -1,0 +1,89 @@
+from flask import Flask, request, jsonify, render_template
+import json
+
+app = Flask(__name__)
+
+studs = [
+    { "name" : "Андрей",
+      "marks": [5,4,3,4,5,5],
+      "group": "ИБМ7-22"
+    },
+    { "name" : "Макс",
+      "marks": [4,4,5,5,5,4],
+      "group": "ИБМ7-22"
+    },
+    { "name" : "Володя",
+      "marks": [3,4,3,4,3,5],
+      "group": "ИБМ7-22"
+    }
+]
+
+@app.route("/",methods=['GET'])
+def root():
+    a = json.loads('{"name":"ivan","hp":100}')
+    print(a.keys())
+    print(a['hp'])
+    print(type(a))
+    return "<h1>Ответ на запрос GET</h1>"
+
+@app.route("/user",methods=['GET'])
+def user():
+    name = "Студент"
+    marks = [5,4,3,4,5,5]
+    return render_template('user.html',name = name,marks = marks)
+
+@app.route("/student/<stud_name>/",methods=['GET'])
+def student(stud_name):
+    print("============================")
+    for student in studs:
+        if student["name"] == stud_name:
+            print("Нашли", stud_name)
+            return render_template("student.html",
+                name = student["name"],
+                group = student["group"],
+                marks = student["marks"])
+    print("============================")
+    return "Никого не нашли с таким именем"
+
+@app.route("/new_std",methods=['GET'])
+def new_std():
+    print("============================")
+    name = request.args.get('name')
+    group = request.args.get('group')
+    marks_str = request.args.get('marks')
+    marks = json.loads(marks_str)
+    print("Имя нового студента",name)
+    print("Группа",group)
+    print("Оценки",marks[0])
+    studs.append({
+        "name":name,
+        "group":group,
+        "marks":marks
+    })
+    print("============================")
+    return "Добавили студента <br>" + str(studs)
+
+
+
+@app.route("/student_create",methods=['GET'])
+def student_create():
+    if request.method == 'POST':
+        new_std = request.get_json()
+        print("Получили запрос пост")
+        print(new_std)
+        return render_template('student_create.html')
+    if request.method == 'GET':
+        print("Запрос GET")
+        return render_template('student_create.html')
+@app.route("/group/<group_name>/",methods=['GET'])
+def group(group_name):
+    print("============================")
+    for student in studs:
+        if student["group"] == group_name:
+            print("Нашли", group_name)
+            return render_template("student.html",
+                name = student["name"],
+                group = student["group"],
+                marks = student["marks"])
+    print("============================")
+    return "Никого не нашли с такой группой" + str(studs)
