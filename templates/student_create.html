@@ -1,0 +1,27 @@
+<html>
+<head>
+<script type="text/javascript">
+
+  function testButton() {
+    name = document.getElementById('name').value;
+    group = document.getElementById('group').value;
+    marks = document.getElementById('avmark').value;
+    window.location.replace("http://localhost:5000/new_std?name="+name+"&group="+group+"&marks="+marks)
+    }
+</script>
+  <title>Страница создания студента</title>
+</head>
+
+<body>
+<h1>Страница создания студента</h1>
+<form>
+  <label for="name">Имя:</label><br>
+  <input type="text" id="name" name="name"><br>
+  <label for="group">Группа:</label><br>
+  <input type="text" id="group" name="group"><br>
+  <label for="avmark">Оценки:</label><br>
+  <input type="text" id="avmark" name="avmark">
+</form>
+<button type="button" name="button" onclick="testButton()">Press me</button>
+</body>
+</html>
